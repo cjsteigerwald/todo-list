@@ -1,13 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { persistStore} from 'redux-persist';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+import { Provider } from 'react-redux';
+import { configureStore } from './store';
+
+import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'jquery/dist/jquery.js';
+import 'popper.js/dist/umd/popper.js';
+import 'bootstrap/dist/js/bootstrap.js';
+
 
 ReactDOM.render(
+  
+  <Provider store={configureStore()}>
   <React.StrictMode>
+
     <App />
-  </React.StrictMode>,
+  </React.StrictMode>
+  </Provider>,
   document.getElementById('root')
 );
 
