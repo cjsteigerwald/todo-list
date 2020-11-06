@@ -1,26 +1,36 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TodoListItem from './TodoListItem';
-import { removeTodo } from './actions';
+import { 
+    removeTodo,
+    todoComplete,
+    todoEditMode,
+    todoSaveEdit,
+    } from './actions';
 import { 
          TodoHeader, 
         } from './user-interface';
 import AddTodoForm from './AddTodoForm';
 
-const TodoList = ( { todos = [], onRemovePressed }) => {
+const TodoList = ( { todos = [], onRemovePressed, onCompletePressed, onEditPressed, onSavePressed }) => {
+    const statusList = ['Not Started', 'Complete', 'In Progress'];
 
     return (
             <>
                 <div className='container'>
                     <div className='row'>
                         <div className='col text-center'>
-                            <AddTodoForm />
-                            <TodoHeader>Todo List</TodoHeader>
+                            <TodoHeader>Pending</TodoHeader>
+                            <AddTodoForm statusList={statusList}/>
                             
-                            {/* Adding Todo List Item(s) */}
-                            {todos.map((todo, index) => <TodoListItem 
+                            {/*Adding Todo List Item(s) */}
+                             {todos.map((todo, index) => <TodoListItem 
                                 todo={todo}
+                                statusList={statusList}
                                 onRemovePressed={onRemovePressed}
+                                onCompletePressed={onCompletePressed}
+                                onEditPressed={onEditPressed}
+                                onSavePressed={onSavePressed}
                                 key={index}
                             />
                             )}
@@ -43,7 +53,10 @@ const mapStateToProps = state => ({
 // will dispatch action 
 // add actions to be passed in to AddTodoFrom
 const mapDispatchToProps = dispatch => ({
-    onRemovePressed: (text, dueDate) => dispatch(removeTodo(text, dueDate)),
+    onRemovePressed: (text) => dispatch(removeTodo(text)),
+    onCompletePressed: (text, dueDate, status) => dispatch(todoComplete(text, dueDate, status)),
+    onEditPressed: (text) => dispatch(todoEditMode(text)),
+    onSavePressed: (text,status) => dispatch(todoSaveEdit(text, status)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoList);

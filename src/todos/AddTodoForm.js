@@ -9,26 +9,30 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Dropdown from 'react-bootstrap/Dropdown'
 
 
-const AddTodoForm = ( { todos, onCreatePressed } ) => {
+const AddTodoForm = ( { todos, onCreatePressed, statusList } ) => {
     // const { text, dateCreated, isComplete } = todo;
     // const [showAddTodoForm, setshowAddTodoForm] = useState;
     const [showForm, setShowForm] = useState(false);
     const [todoText, setTodoText] = useState('');
     const [dueDate, setDueDate] = useState('');
+    const [status, setStatus] = useState('');
    
     const handleClose = () => setShowForm(false);
-
+    
     const handleAddTodo = () => {
         // Check for duplicate todo text 
         const isDuplicateText = 
             todos.some(todo => todo.text === todoText);
         if (!isDuplicateText){
-            onCreatePressed(todoText, dueDate);
+            onCreatePressed(todoText, dueDate, status);
             setTodoText('');
             setShowForm(false);
             setDueDate('');
+            setStatus('');
         }
     }
     // const handleShow = () => setShow(true);
@@ -50,7 +54,7 @@ const AddTodoForm = ( { todos, onCreatePressed } ) => {
             </Modal.Header>
             <Modal.Body className='show-grid'>
                 <Container>
-                    <Row>
+                    <Row className='mb-3'>
                         <Col md={3} >
                             <label className="text-md-right" htmlFor="TodoText">
                             Todo Notes
@@ -66,9 +70,9 @@ const AddTodoForm = ( { todos, onCreatePressed } ) => {
                                 />
                         </Col>
                     </Row>
-                    <Row>
+                    <Row >
                         <Col md={3} >
-                            <label className=" " htmlFor="aptNotes">
+                            <label className=" " htmlFor="Date Picker">
                             Due Date
                             </label>
                         </Col>
@@ -83,19 +87,37 @@ const AddTodoForm = ( { todos, onCreatePressed } ) => {
                             />
                         </Col>
                     </Row>
-            </Container>
-            
-                    
+                    <Row>
+                        <Col md={3} >
+                            <label className=" " htmlFor="Status">
+                            Status
+                            </label>
+                        </Col>
+                        <Col md={9}>
+                            <DropdownButton
+                                title='Status'
+                                onSelect={e => setStatus(e)}
+                            > 
+                                {statusList.map((status, index) => 
+                                    <Dropdown.Item
+                                        eventKey={status}>{status}</Dropdown.Item>
+                                )}
+                            </DropdownButton>
+                            
+
+                        </Col>
+                    </Row>
+                </Container>
             </Modal.Body>
             <Modal.Footer>
-            <Button variant="secondary" 
-                onClick={handleClose}
-            >
-                Close
-            </Button>
-            <Button variant="primary"
-                onClick={handleAddTodo}
-            >New Todo</Button>
+            <div className='btn-group'>
+                <Button className='btn mx-1 btn-danger'
+                    onClick={handleClose}
+                >Close</Button>
+                <Button className='btn mx-1 btn-success'
+                    onClick={handleAddTodo}
+                >New Todo</Button>
+            </div>
             </Modal.Footer>
         </Modal>
         </>
@@ -115,7 +137,7 @@ const mapStateToProps = state => ({
 // will dispatch action 
 // add actions to be passed in to AddTodoFrom
 const mapDispatchToProps = dispatch => ({
-    onCreatePressed: (text, dueDate) => dispatch(createTodo(text, dueDate)),
+    onCreatePressed: (text, dueDate, status) => dispatch(createTodo(text, dueDate, status)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddTodoForm)

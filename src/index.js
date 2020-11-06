@@ -13,15 +13,19 @@ import 'jquery/dist/jquery.js';
 import 'popper.js/dist/umd/popper.js';
 import 'bootstrap/dist/js/bootstrap.js';
 
+const store = configureStore();
+const persistor = persistStore(store);
 
 ReactDOM.render(
-  
-  <Provider store={configureStore()}>
   <React.StrictMode>
-
-    <App />
-  </React.StrictMode>
-  </Provider>,
+  <Provider store={store}>
+        <PersistGate
+            loading={<div>Loading...</div>}
+            persistor={persistor}>
+            <App />
+        </PersistGate>
+    </Provider>
+  </React.StrictMode>,
   document.getElementById('root')
 );
 
