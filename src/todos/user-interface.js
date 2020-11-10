@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import moment from 'moment'
+
 
 export const TodoHeader = styled.h1 `
     font-size: 2.5em;
@@ -14,14 +16,15 @@ export const CardListItemHeader = styled(Card.Header)`
     background: ${props => {
         switch(props.status) {
             case 'Not Started':{
-                return 'red'
+                return moment(props.duedate).format('MMM DD, YYYY') < moment(Date.now()).format('MMM DD, YYYY') ? 'red' : 'purple';
                 }
             case 'In Progress': {
-                return 'purple'
+                return moment(props.duedate).format('MMM DD, YYYY') < moment(Date.now()).format('MMM DD, YYYY') ? 'red' : 'indigo';
             }
-            case 'Complete': {
-                return 'green'
+            case 'Complete': {                
+                return moment(props.datecomplete).format('MMM DD, YYYY') === moment(Date.now()).format('MMM DD, YYYY') ? 'blue' : 'green'
             }
+               
             default:
                 return 'yellow'
         }
@@ -31,8 +34,8 @@ export const CardListItemHeader = styled(Card.Header)`
     color: white;
 `;
 
-export const CardListItemTodoText = styled(Card.Text)`
-    border: ${props => (props.editMode ? '1px solid green' : '') };
+export const CardListItemTodoText = styled(Card.Text)`    
+   
 `;
 
 
@@ -42,3 +45,4 @@ export const CardTodoComplete = styled(Card)`
 
 export const AddTodoButton = styled(Button)`
 `;
+

@@ -17,7 +17,7 @@ const store = configureStore();
 const persistor = persistStore(store);
 
 ReactDOM.render(
-  <React.StrictMode>
+  
   <Provider store={store}>
         <PersistGate
             loading={<div>Loading...</div>}
@@ -25,7 +25,7 @@ ReactDOM.render(
             <App />
         </PersistGate>
     </Provider>
-  </React.StrictMode>,
+  ,
   document.getElementById('root')
 );
 

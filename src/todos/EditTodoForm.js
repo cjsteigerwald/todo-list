@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { addTodoRequest } from './thunks';
-import {
-    AddTodoButton
-} from './user-interface.js';
+import { editTodoRequest, discardEditRequest } from './thunks';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -15,45 +12,37 @@ import moment from 'moment';
 
 
 
-const AddTodoForm = ( { todos, onCreatePressed, statusList } ) => {
-    // const { text, dateCreated, isComplete } = todo;
-    // const [showAddTodoForm, setshowAddTodoForm] = useState;
-    const [showForm, setShowForm] = useState(false);
-    const [todoText, setTodoText] = useState('');
-    const [dueDate, setDueDate] = useState('');
-    const [todoStatus, setTodoStatus] = useState('');
-   
-    const handleClose = () => {
-        setShowForm(false)
+
+const EditTodoForm = ( { todo, statusList, onEditPressed, onDiscardPressed } ) => {
+    const {  text,  editMode, status, dueDate, id } = todo;
+    
+    const [todoText, setTodoText] = useState(text);
+    const [todoDueDate, setTodoDueDate] = useState(dueDate);
+    const [todoStatus, setTodoStatus] = useState(status);   
+    const handleDiscard = () => {
+        onDiscardPressed(id);
         setTodoText('');
-        setShowForm(false);
-        setDueDate('');
+        setTodoDueDate('');
         setTodoStatus('');
     };
     
-    const handleAddTodo = () => {
-        onCreatePressed(todoText, dueDate, todoStatus);
+    const handleEditAddTodo = () => {       
+        onEditPressed(todoText, todoDueDate, todoStatus, id);
         setTodoText('');
-        setShowForm(false);
-        setDueDate('');
+        setTodoDueDate('');
         setTodoStatus('');
     }
-
-    return (
-        <> 
-            <AddTodoButton
-                className='btn btn-primary my-2' 
-                onClick={e => setShowForm(true)}
-                >New Todo
-            </AddTodoButton>
+    
+    return (        
+        <>            
             <Modal
-            show={showForm}
-            onHide={handleClose}
+            show={editMode}
+            // onHide={handleDiscard}
             backdrop="static"
             keyboard={false}
-        >
+            >
             <Modal.Header>
-            <Modal.Title>New Todo</Modal.Title>
+            <Modal.Title>Edit Todo</Modal.Title>
             </Modal.Header>
             <Modal.Body className='show-grid'>
                 <Container>
@@ -85,8 +74,8 @@ const AddTodoForm = ( { todos, onCreatePressed, statusList } ) => {
                                 className='form-control'
                                 name='dueDate'
                                 id='dueDate'
-                                value={dueDate}
-                                onChange={e => moment(setDueDate(e.target.value)).format('MMM DD, YYYY')}
+                                value={todoDueDate}
+                                onChange={e => moment(setTodoDueDate(e.target.value)).format('MMM DD, YYYY')}
                             />
                         </Col>
                     </Row>
@@ -104,11 +93,9 @@ const AddTodoForm = ( { todos, onCreatePressed, statusList } ) => {
                                 {statusList.map((status, index) => 
                                     <Dropdown.Item
                                     key={index}
-                                        eventKey={status}>{status}</Dropdown.Item>
+                                    eventKey={status}>{status}</Dropdown.Item>
                                 )}
                             </DropdownButton>
-                            
-
                         </Col>
                     </Row>
                 </Container>
@@ -116,16 +103,15 @@ const AddTodoForm = ( { todos, onCreatePressed, statusList } ) => {
             <Modal.Footer>
             <div className='btn-group'>
                 <Button className='btn mx-1 btn-danger'
-                    onClick={handleClose}
-                >Close</Button>
+                    onClick={handleDiscard}
+                >Discard</Button>
                 <Button className='btn mx-1 btn-success'
-                    onClick={handleAddTodo}
-                >New Todo</Button>
+                    onClick={handleEditAddTodo}
+                >Save</Button>
             </div>
             </Modal.Footer>
         </Modal>
-        </>
-  
+        </>  
     )
 }
 
@@ -141,7 +127,8 @@ const mapStateToProps = state => ({
 // will dispatch action 
 // add actions to be passed in to AddTodoFrom
 const mapDispatchToProps = dispatch => ({
-    onCreatePressed: (text, dueDate, status) => dispatch(addTodoRequest(text, status, dueDate)),
+    onEditPressed: (text, dueDate, status, id) => dispatch(editTodoRequest(text, dueDate, status, id)),
+    onDiscardPressed: id => dispatch(discardEditRequest(id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddTodoForm)
+export default connect(mapStateToProps, mapDispatchToProps)(EditTodoForm)

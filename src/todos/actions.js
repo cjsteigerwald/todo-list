@@ -1,22 +1,22 @@
 export const CREATE_TODO = 'CREATE_TODO';
 
-export const createTodo = (text, dueDate, status) => ({
+export const createTodo = todo => ({
     type: CREATE_TODO,
-    payload: { text, dueDate, status }
+    payload: { todo }
 });
 
 export const REMOVE_TODO = 'REMOVE_TODO';
 
-export const removeTodo = text => ({
+export const removeTodo = todo => ({
     type: REMOVE_TODO,
-    payload: { text }
+    payload: { todo }
 });
 
 export const TODO_COMPLETE = 'TODO_COMPLETE';
 
-export const todoComplete = text => ({
+export const todoComplete = todo => ({
     type: TODO_COMPLETE,
-    payload: { text }
+    payload: { todo }
 });
 
 export const TODO_EDIT_MODE = 'TODO_EDIT_MODE';
@@ -27,11 +27,40 @@ export const todoEditMode = text => (
     payload: { text }
 });
 
+export const DISCARD_EDIT_MODE = 'DISCARD_EDIT_MODE';
+
+export const discardEditMode = id => (    
+    {
+    type: DISCARD_EDIT_MODE,
+    payload: { id }
+});
+
 export const TODO_SAVE_EDIT = 'TODO_SAVE_EDIT';
 
-export const todoSaveEdit = (text, status) => (    
+export const todoSaveEdit = (todo) => (    
     {
     type: TODO_SAVE_EDIT,
-    payload: { text, status }
+    payload: { todo }
+});
+
+
+
+export const LOAD_TODOS_IN_PROGRESS = 'LOAD_TODOS_IN_PROGRESS';
+
+export const loadTodosInProgress = () => ({
+    type: LOAD_TODOS_IN_PROGRESS,
+});
+
+export const LOAD_TODOS_SUCCESS = 'LOAD_TODOS_SUCESS';
+
+export const loadTodosSuccess = todos => ({
+    type: LOAD_TODOS_SUCCESS,
+    payload: { todos },
+});
+
+export const LOAD_TODOS_FAILURE = 'LOAD_TODOS_FAILURE';
+
+export const loadTodosFailure = () => ({
+    type: LOAD_TODOS_FAILURE,
 });
 

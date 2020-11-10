@@ -3,35 +3,46 @@ import { CREATE_TODO,
          TODO_COMPLETE,
          TODO_EDIT_MODE,
          TODO_SAVE_EDIT,
+         LOAD_TODOS_IN_PROGRESS,
+         LOAD_TODOS_SUCCESS,
+         LOAD_TODOS_FAILURE,
+         DISCARD_EDIT_MODE,
          } from './actions';
+
+export const isLoading = (state = false, action) => {
+    const { type } = action;
+
+    switch (type) {
+        case LOAD_TODOS_IN_PROGRESS:
+            return true;
+        case LOAD_TODOS_SUCCESS:
+        case LOAD_TODOS_FAILURE:
+            return false;
+        default:
+            return state;
+    }
+}
+
+
 
 export const todos = (state = [], action) => {
     
     const { type, payload } = action;
-
+    
     switch (type) {
         case CREATE_TODO: {
-            const { text, dueDate,status } = payload;            
-            const newTodo = {
-                text: text,
-                dateCreated: Date.now(),
-                dueDate: dueDate,
-                dateComplete: '',
-                isComplete: false,
-                editMode: false,
-                status: status,
-            };
-            return state.concat(newTodo);
+            const { todo } = payload;
+            return state.concat(todo);
         }
         case REMOVE_TODO: {
-            const { text } = payload;
-            return state.filter(todo => todo.text !== text);
+            const { todo: todoToRemove } = payload;
+            return state.filter(todo => todo.id !== todoToRemove.id);
         }
         case TODO_COMPLETE: {
-            const { text } = payload;
+            const { todo: completedTodo } = payload;
             return state.map(todo => {
-                if (todo.text === text) {
-                    return { ...todo, isComplete: true, dateComplete: Date.now(), status: 'Complete'};
+                if (todo.id === completedTodo.id) {
+                    return { ...completedTodo };
                 }
                 return todo;
             })
@@ -46,17 +57,29 @@ export const todos = (state = [], action) => {
             })
         }
         case TODO_SAVE_EDIT: {
-            const { text, status } = payload;
+            const { todo: editedTodo } = payload;
             return state.map(todo => {
-                if (todo.editMode) {
-                    console.log('Reducer: ', status)
-                    return { ...todo, editMode: false, text: text, status: status}
+                if (todo.id === editedTodo.id) {
+                    return { ...editedTodo}
                 }
-                
                 return todo;
             })
         }
-        
+        case DISCARD_EDIT_MODE: {
+            const { id } = payload;
+            return state.map(todo => {
+                if (todo.id === id) {
+                    return { ...todo, editMode: false}
+                }
+                return todo;
+            })
+        }
+        case LOAD_TODOS_SUCCESS: {
+            const { todos } = payload;
+            return todos;
+        }
+        case LOAD_TODOS_IN_PROGRESS: 
+        case LOAD_TODOS_FAILURE: 
         default:
             return state;
     }
