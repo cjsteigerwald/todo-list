@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { getTodos } from './selectors'; 
 import { editTodoRequest, discardEditRequest } from './thunks';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
@@ -119,7 +120,7 @@ const EditTodoForm = ( { todo, statusList, onEditPressed, onDiscardPressed } ) =
 
 // Maps the state Object to props then passed in as todos to AddTodoForm ()
 const mapStateToProps = state => ({
-    todos: state.todos,
+    todos: getTodos(state),
 });
 
 // Instead of taking redux state it takes dispatch, allows redux actions to be triggered

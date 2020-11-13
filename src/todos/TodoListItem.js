@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { getTodos } from './selectors'; 
+
 import {
     CardTodoIncomplete,
     CardListItemHeader,
@@ -65,7 +67,7 @@ const TodoListItem = ( {todo, onRemovePressed, onCompletedPressed, onEditPressed
 
 // Maps the state Object to props then passed in as todos to AddTodoForm ()
 const mapStateToProps = state => ({
-    todos: state.todos,
+    todos: getTodos(state),
 });
 
 export default connect(mapStateToProps, null)(TodoListItem)

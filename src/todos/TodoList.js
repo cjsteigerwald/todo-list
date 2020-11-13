@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { getTodos, getTodosLoading } from './selectors'; 
 import { loadTodos } from './thunks';
 import BuildTable from './BuildTable';
 import { 
@@ -41,8 +42,8 @@ const TodoList = ( { todos = [], isLoading, startLoadingTodos }) => {
 
 // Maps the state Object to props then passed in as state to AddTodoForm ()
 const mapStateToProps = state => ({
-    isLoading: state.isLoading,
-    todos: state.todos,
+    isLoading: getTodosLoading(state),
+    todos: getTodos(state),
 });
 
 // Instead of taking redux state it takes dispatch, allows redux actions to be triggered

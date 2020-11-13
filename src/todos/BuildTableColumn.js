@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { getTodos, getNotStartedTodos, getInProgressTodos, getCompletedTodos } from './selectors'; 
 import TodoListItem from './TodoListItem';
 import {removeTodoRequest, discardEditRequest, completedTodoRequest} from './thunks';
 import { 
@@ -10,7 +11,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Dropdown } from 'react-bootstrap';
 
 
-const BuildTableColumn = ( { todos = [], onRemovePressed, onCompletedPressed, onEditPressed, onSavePressed, statusList, status }) => {
+const BuildTableColumn = ( { todos = [], notStartedTodos, inProgressTodos, completedTodos, onRemovePressed, onCompletedPressed, onEditPressed, onSavePressed, statusList, status }) => {
     const [orderDir, setOrder] = useState('asc');
 
     const buildListItems = (status ) => {
@@ -68,7 +69,11 @@ const BuildTableColumn = ( { todos = [], onRemovePressed, onCompletedPressed, on
 
 // Maps the state Object to props then passed in as state to AddTodoForm ()
 const mapStateToProps = state => ({
-    todos: state.todos,
+    todos: getTodos(state),
+    notStartedTodos: getNotStartedTodos(state),
+    inProgressTodos: getInProgressTodos(state),
+    completedTodos: getCompletedTodos(state),
+
 });
 
 // Instead of taking redux state it takes dispatch, allows redux actions to be triggered
